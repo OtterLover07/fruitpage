@@ -1,0 +1,9 @@
+h3 Latest Fruit Statistics
+- if @frukt != nil
+    ol 
+        li Name: #{@frukt["name"]}
+        li Weight: #{@frukt["weight"]} kg
+        li Color: #{@frukt["color"]}
+        li Botanical Category: #{@frukt["category"]}
+- else
+    h4 Error: No fruits in database

@@ -1,0 +1,12 @@
+- if @fruitlist.length == 0
+    h2 There are no fruits in the database
+- else
+    h3 Fruits In Database:
+
+    - @fruitlist.each do |object|
+        h4 #{object["name"]}
+        ol
+            li Name: #{object["name"]}
+            li Weight: #{object["weight"]} kg
+            li Color: #{object["color"]}
+            li Botanical Category: #{object["category"]}
