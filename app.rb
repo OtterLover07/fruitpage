@@ -1,6 +1,7 @@
 require 'sinatra'
 require 'sinatra/reloader'
 require 'slim'
+require 'sqlite3'
 
 $fruitlist = ["apple", "pear", "guava", "papaya", "lemon", "lime", "pineapple"]
 $berrylist = ["banana", "berry", "melon", "tomato"]
@@ -50,6 +51,33 @@ get('/') do
     slim(:home)
 end
 
+get('/fruits') do
+    db = SQLite3::Database.new("db/fruits.db")
+    db.case_sensitive_like = false
+    db.results_as_hash = true
+
+    if (@query = params[:q]) != nil
+        @fruits = db.execute("SELECT * FROM fruits WHERE name LIKE ?","%#{@query.upcase}")
+        # @fruits = db.execute("SELECT * FROM fruits WHERE UPPER(name) LIKE ?","%#{@query.upcase}")
+    else
+        @fruits = db.execute("SELECT * FROM fruits")
+    end
+
+    slim(:"fruits/index")
+end
+
+get('/fruits/new') do
+    slim(:"fruits/new")
+end
+
+post('/newfruit') do
+    db = SQLite3::Database.new("db/fruits.db")
+    name, amount = params[:name], params[:amount].to_i
+
+    db.execute("INSERT INTO fruits (name, amount) VALUES (?,?)",[name,amount])
+    redirect('/fruits')
+end
+
 get('/about') do
     slim(:about)
 end
@@ -63,12 +91,12 @@ get('/test/:name') do
     slim(:homename)
 end
 
-get('/fruits') do
+get('/fruits_old') do
     @fruits = ["banan", "melon", "kiwi", "citron"]
-    slim(:fruits)
+    slim(:fruits_old)
 end
 
-get('/fruits/:id') do
+get('/fruits_old/:id') do
     fruits = ["banan", "melon", "kiwi", "citron"]
     id = params[:id].to_i
     @fruit = fruits[id]
@@ -81,7 +109,7 @@ get('/fruitinfo') do
     slim(:fruitinfo)
 end
 
-get ('/newfruit/:fruit') do
+get ('/newfruit_old/:fruit') do
     choice = Item.new(params[:fruit].to_s)
     $globalfruits << @frukt = {
         "name" => choice.name,

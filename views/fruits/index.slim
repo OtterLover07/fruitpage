@@ -1,0 +1,28 @@
+form action="/fruits/new" method="get"
+    input type="submit" value="Add a fruit"
+br
+
+form action="/fruits" method="get"
+    input name="q" placeholder="Search for fruits" type="text"
+    input type="submit" value="Search"
+
+
+- if @fruits.length == 0
+    - if @query != nil
+        h2 There are no fruits named #{@query} in the database
+    - else
+        h2 There are no fruits in the database
+- else
+    h2 Fruits In Database:
+
+    - @fruits.each do |fruit|
+        h3 = fruit["name"]
+        p det finns #{fruit["amount"]}st
+        hr
+
+        / h4 #{fruit["name"]}
+        / ol
+        /     li Name: #{fruit["name"]}
+        /     li Weight: #{fruit["weight"]} kg
+        /     li Color: #{fruit["color"]}
+        /     li Botanical Category: #{fruit["category"]}
