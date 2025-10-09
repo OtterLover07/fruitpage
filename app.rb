@@ -1,7 +1,10 @@
 require 'sinatra'
 require 'sinatra/reloader'
+require 'sinatra/flash'
 require 'slim'
 require 'sqlite3'
+
+enable :sessions
 
 $fruitlist = ["apple", "pear", "guava", "papaya", "lemon", "lime", "pineapple"]
 $berrylist = ["banana", "berry", "melon", "tomato"]
@@ -46,7 +49,6 @@ class Item
 end
 
 
-
 get('/') do
     slim(:home)
 end
@@ -66,17 +68,68 @@ get('/fruits') do
     slim(:"fruits/index")
 end
 
-get('/fruits/new') do
+get('/fruits/new?') do
     slim(:"fruits/new")
 end
 
-post('/newfruit') do
+post('/fruits/new') do
     db = SQLite3::Database.new("db/fruits.db")
     name, amount = params[:name], params[:amount].to_i
 
-    db.execute("INSERT INTO fruits (name, amount) VALUES (?,?)",[name,amount])
+    if db.execute("INSERT INTO fruits (name, amount) VALUES (?,?)",[name,amount])
+        flash[:info] = "Info: Fruit named #{name} successfully added"
+    end
     redirect('/fruits')
 end
+
+get('/fruits/:id/edit') do
+    db = SQLite3::Database.new("db/fruits.db")
+    db.results_as_hash = true
+    id = params[:id].to_i
+    
+    @fruit = db.execute("SELECT * FROM fruits WHERE id=?",id).first
+
+    slim(:"fruits/edit")
+end
+
+post('/fruits/:id/edit') do
+    db = SQLite3::Database.new("db/fruits.db")
+    db.results_as_hash = true
+    id, name, amount = params[:id].to_i, params[:name], params[:amount].to_i
+    fruit = db.execute("SELECT * FROM fruits WHERE id=?",id).first
+
+    if db.execute("UPDATE fruits SET name=?, amount=? WHERE id=?",[name,amount,id])
+        if name != fruit["name"]
+            flash[:name] = "Info: Name successfully changed to #{name}"
+        end
+        if amount != fruit["amount"]
+            flash[:amount] = "Info: Amount successfully changed to #{amount}"
+        end
+    end
+    redirect('/fruits')
+end
+
+
+post('/fruits/:id/delete') do
+    db = SQLite3::Database.new("db/fruits.db")
+    to_delete = params[:id].to_i
+
+    if db.execute("DELETE FROM fruits WHERE id=?",to_delete)
+        flash[:deleted] = "Info: Fruit successfully deleted"
+    end
+    redirect('/fruits')
+end
+
+
+
+
+
+
+
+
+
+
+
 
 get('/about') do
     slim(:about)
@@ -126,3 +179,7 @@ get ('/latestfruit') do
     
     slim(:latestfruit)
 end
+
+# get('/404') do
+#     slim(:404)
+# end

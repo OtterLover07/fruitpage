@@ -6,7 +6,13 @@ html lang="en"
         title Document
     body 
 
-    h1 frukt sida yippee
+    h1 Fruit Page Battlestation
 
+    - if flash.length != 0
+        hr
+        - flash.each do |key,value|
+            p #{value}
+    
     hr
+
     ==yield

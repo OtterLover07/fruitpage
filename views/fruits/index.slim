@@ -16,13 +16,9 @@ form action="/fruits" method="get"
     h2 Fruits In Database:
 
     - @fruits.each do |fruit|
-        h3 = fruit["name"]
-        p det finns #{fruit["amount"]}st
+        h2
+            a href="/fruits/#{fruit["id"]}/edit" style="color:black" #{fruit["name"]}
+        p There are #{fruit["amount"]} of these
+        form action="/fruits/#{fruit["id"]}/delete" method="post"
+            input type="submit" value="Delete this fruit"
         hr
-
-        / h4 #{fruit["name"]}
-        / ol
-        /     li Name: #{fruit["name"]}
-        /     li Weight: #{fruit["weight"]} kg
-        /     li Color: #{fruit["color"]}
-        /     li Botanical Category: #{fruit["category"]}

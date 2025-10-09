@@ -1,0 +1,6 @@
+h2 Fruit Editor
+
+form action="/fruits/#{@fruit["id"]}/edit" method="post"
+    input name="name" value="#{@fruit["name"]}" type="text"
+    input name="amount" value="#{@fruit["amount"]}" type="number"
+    input type="submit" value="Submit"
