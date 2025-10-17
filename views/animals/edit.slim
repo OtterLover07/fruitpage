@@ -1,0 +1,10 @@
+h2 Animal Editor
+
+form action="/animals/#{@animal["id"]}/edit" method="post"
+    input name="name" placeholder="Name of animal" type="text" value="#{@animal["name"]}"
+    br
+    input name="legs" placeholder="Amount of legs" type="number" value="#{@animal["legs"]}"
+    br
+    input style="width: fit-content; min-width: 120px;" name="notes" placeholder="Notes" type="text" value="#{@animal["notes"]}"
+    br
+    input type="submit" value="Submit"

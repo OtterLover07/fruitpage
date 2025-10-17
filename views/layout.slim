@@ -8,11 +8,23 @@ html lang="en"
 
     h1 Fruit Page Battlestation
 
+    h3
+        a style="margin-right: 20px" href='/fruits' Fruit Database
+        a href='/animals' Animal Database
+
+    - if session[:admin]
+        form action="/logout" method="post"
+            input type="submit" value="Log out"
+    - else
+        form action="/login" method="post"
+            input name="pass" type="password" placeholder="Enter Admin Password"
+            input type="submit" value="Log in"
+    hr
+
     - if flash.length != 0
-        hr
         - flash.each do |key,value|
             p #{value}
     
-    hr
+        hr
 
     ==yield

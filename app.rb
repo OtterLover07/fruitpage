@@ -53,6 +53,8 @@ get('/') do
     slim(:home)
 end
 
+require_relative('animals.rb')
+
 get('/fruits') do
     db = SQLite3::Database.new("db/fruits.db")
     db.case_sensitive_like = false
